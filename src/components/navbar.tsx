@@ -14,7 +14,9 @@ export default function Navbar() {
     <Box boxShadow="base">
       <Container>
         <Flex as="nav" py={2}>
-          <Heading size="lg">NextJS & Chakra UI</Heading>
+          <Heading size={{ base: "sm", sm: "md", md: "lg" }}>
+            NextJS & Chakra UI
+          </Heading>
           <HStack ms={5}>
             <Link href="/">
               <Text>Home</Text>
