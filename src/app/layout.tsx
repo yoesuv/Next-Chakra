@@ -4,6 +4,7 @@ import { fonts } from "@/utils/chakra-font";
 import { Container } from "@chakra-ui/react";
 import Navbar from "@/components/navbar";
 import { AppChakraProvider } from "@/utils/app-chakra-provider";
+import { Providers } from "@/utils/providers";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -19,8 +20,10 @@ export default function RootLayout({
     <html lang="en">
       <body className={fonts.rubik.variable}>
         <AppChakraProvider>
-          <Navbar />
-          <Container>{children}</Container>
+          <Providers>
+            <Navbar />
+            <Container>{children}</Container>
+          </Providers>
         </AppChakraProvider>
       </body>
     </html>
