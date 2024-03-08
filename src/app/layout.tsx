@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { fonts } from "@/utils/chakra-font";
-import { Container } from "@chakra-ui/react";
+import { Box, Container, Flex } from "@chakra-ui/react";
 import Navbar from "@/components/navbar";
 import { AppChakraProvider } from "@/utils/app-chakra-provider";
 import { Providers } from "@/utils/providers";
@@ -21,8 +21,16 @@ export default function RootLayout({
       <body className={fonts.rubik.variable}>
         <AppChakraProvider>
           <Providers>
-            <Navbar />
-            <Container>{children}</Container>
+            <Flex as="header" position="fixed" w="100%" bg="white">
+              <Box shadow="sm" w="100%">
+                <Navbar />
+              </Box>
+            </Flex>
+            <Flex>
+              <Container as="main" mt={16}>
+                {children}
+              </Container>
+            </Flex>
           </Providers>
         </AppChakraProvider>
       </body>
