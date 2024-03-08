@@ -30,11 +30,13 @@ export default function DetailPost({ params }: PostProps) {
             aria-label="back to list post"
             icon={<ArrowBackIcon boxSize={7} />}
             onClick={router.back}
-          />{" "}
+          />
           <Heading size="lg">Detail Posts {params.id}</Heading>
         </HStack>
-        <Text>This is Title</Text>
-        <Text>This is Body Lorem ipsum</Text>
+        <Text mt={5} fontSize="2xl" fontWeight="medium">
+          {data?.title}
+        </Text>
+        <Text fontSize="lg">{data?.body}</Text>
       </VStack>
     </Container>
   );
