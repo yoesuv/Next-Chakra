@@ -1,7 +1,10 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { Providers } from "@/utils/chakra-provider";
 import { fonts } from "@/utils/chakra-font";
+import { Box, Container, Flex } from "@chakra-ui/react";
+import Navbar from "@/components/navbar";
+import { AppChakraProvider } from "@/utils/app-chakra-provider";
+import { Providers } from "@/utils/providers";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -16,7 +19,20 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={fonts.rubik.variable}>
-        <Providers>{children}</Providers>
+        <AppChakraProvider>
+          <Providers>
+            <Flex as="header" position="fixed" w="100%" bg="white">
+              <Box shadow="sm" w="100%">
+                <Navbar />
+              </Box>
+            </Flex>
+            <Flex>
+              <Container as="main" mt={16} maxW="full">
+                {children}
+              </Container>
+            </Flex>
+          </Providers>
+        </AppChakraProvider>
       </body>
     </html>
   );
