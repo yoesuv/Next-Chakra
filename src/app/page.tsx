@@ -28,7 +28,7 @@ export default function Home() {
               <Th>
                 <HStack>
                   <Spacer />
-                  <Link href="/">
+                  <Link href={"post/" + item.id}>
                     <Button size="xs" colorScheme="green">
                       <InfoOutlineIcon />
                     </Button>
