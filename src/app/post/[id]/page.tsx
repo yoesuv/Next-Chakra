@@ -8,20 +8,29 @@ import {
   Text,
   Box,
   IconButton,
+  HStack,
 } from "@chakra-ui/react";
+import { useRouter } from "next/navigation";
 
-export default function DetailPost() {
+interface PostProps {
+  params: { id: number };
+}
+
+export default function DetailPost({ params }: PostProps) {
+  const router = useRouter();
+
   return (
     <Container maxW="container.lg" mt={10}>
       <VStack alignItems="start">
-        <Heading size="lg">
+        <HStack>
           <IconButton
             variant="ghost"
             aria-label="back to list post"
-            icon={<ArrowBackIcon />}
+            icon={<ArrowBackIcon boxSize={7} />}
+            onClick={router.back}
           />{" "}
-          Detail Posts
-        </Heading>
+          <Heading size="lg">Detail Posts {params.id}</Heading>
+        </HStack>
         <Text>This is Title</Text>
         <Text>This is Body Lorem ipsum</Text>
       </VStack>
