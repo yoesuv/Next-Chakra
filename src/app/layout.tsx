@@ -27,7 +27,7 @@ export default function RootLayout({
               </Box>
             </Flex>
             <Flex>
-              <Container as="main" mt={16}>
+              <Container as="main" mt={16} maxW="full">
                 {children}
               </Container>
             </Flex>
