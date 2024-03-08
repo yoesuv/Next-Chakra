@@ -1,5 +1,6 @@
 "use client";
 
+import UseDetailPost from "@/networks/detail-post-service";
 import { ArrowBackIcon } from "@chakra-ui/icons";
 import {
   Container,
@@ -18,6 +19,7 @@ interface PostProps {
 
 export default function DetailPost({ params }: PostProps) {
   const router = useRouter();
+  const { data, isLoading, isError } = UseDetailPost(params.id);
 
   return (
     <Container maxW="container.lg" mt={10}>
