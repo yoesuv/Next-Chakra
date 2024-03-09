@@ -22,13 +22,13 @@ export default function Home() {
       <Table>
         <Tbody>
           {data?.map((item, index) => (
-            <Tr>
+            <Tr key={item.id}>
               <Th>{index + 1}</Th>
               <Th>{item.title}</Th>
               <Th>
                 <HStack>
                   <Spacer />
-                  <Link href="/">
+                  <Link href={"post/" + item.id}>
                     <Button size="xs" colorScheme="green">
                       <InfoOutlineIcon />
                     </Button>
