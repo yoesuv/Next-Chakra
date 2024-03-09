@@ -2,7 +2,6 @@
 
 import { AddIcon, RepeatIcon } from "@chakra-ui/icons";
 import {
-  Box,
   Button,
   Container,
   FormControl,
@@ -17,24 +16,46 @@ import {
   NumberInputStepper,
   Textarea,
 } from "@chakra-ui/react";
+import { useForm, SubmitHandler } from "react-hook-form";
+
+export interface IFormPost {
+  title: string;
+  body: string;
+  userId: number;
+}
 
 export default function Create() {
+  const { register, handleSubmit } = useForm<IFormPost>();
+
+  const onSubmit: SubmitHandler<IFormPost> = (post) => {
+    console.log(JSON.stringify(post));
+  };
+
   return (
-    <form noValidate>
+    <form onSubmit={handleSubmit(onSubmit)} noValidate>
       <Container centerContent={true}>
         <Heading mt={10}>Create Post</Heading>
         <FormControl isRequired mt={4}>
           <FormLabel>Post Title</FormLabel>
-          <Input type="text" name="title" placeholder="input title here" />
+          <Input
+            type="text"
+            placeholder="input title here"
+            {...register("title")}
+          />
         </FormControl>
         <FormControl isRequired mt={4}>
           <FormLabel>Post Body</FormLabel>
-          <Textarea name="body" placeholder="input body here" />
+          <Textarea placeholder="input body here" {...register("body")} />
         </FormControl>
         <FormControl isRequired mt={4}>
           <FormLabel>User Id</FormLabel>
           <NumberInput>
-            <NumberInputField name="userId" placeholder="input user id here" />
+            <NumberInputField
+              placeholder="input user id here"
+              {...register("userId", {
+                valueAsNumber: true,
+              })}
+            />
             <NumberInputStepper>
               <NumberIncrementStepper />
               <NumberDecrementStepper />
