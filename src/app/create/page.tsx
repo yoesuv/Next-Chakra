@@ -1,3 +1,6 @@
+"use client";
+
+import { AddIcon, RepeatIcon } from "@chakra-ui/icons";
 import {
   Box,
   Button,
@@ -41,10 +44,12 @@ export default function Create() {
 
         <HStack w="full" spacing={4} mt={5}>
           <Button type="button" w="full" colorScheme="red">
-            RESET
+            <RepeatIcon boxSize={3} />
+            &nbsp;RESET
           </Button>
           <Button type="submit" w="full" colorScheme="blue">
-            SAVE
+            <AddIcon boxSize={3} />
+            &nbsp;SAVE
           </Button>
         </HStack>
       </Container>
