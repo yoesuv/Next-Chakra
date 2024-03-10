@@ -33,7 +33,7 @@ export default function Home() {
                       <InfoOutlineIcon />
                     </Button>
                   </Link>
-                  <Link href="/">
+                  <Link href={"post/" + item.id + "/edit"}>
                     <Button size="xs" colorScheme="blue">
                       <EditIcon />
                     </Button>
