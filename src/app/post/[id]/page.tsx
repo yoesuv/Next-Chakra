@@ -1,6 +1,6 @@
 "use client";
 
-import UseDetailPost from "@/networks/detail-post-service";
+import { UseDetailPost } from "@/networks/post-service";
 import { ArrowBackIcon } from "@chakra-ui/icons";
 import {
   Container,

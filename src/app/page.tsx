@@ -1,6 +1,6 @@
 "use client";
 
-import UseListPost from "@/networks/list-post-service";
+import { UseListPost } from "@/networks/post-service";
 import { EditIcon, InfoOutlineIcon, DeleteIcon } from "@chakra-ui/icons";
 import {
   Table,
