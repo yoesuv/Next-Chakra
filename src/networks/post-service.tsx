@@ -41,4 +41,5 @@ export const UseDetailPost = (id: number) =>
     queryFn: () => {
       return fetchDetailPosts(id);
     },
+    gcTime: 0,
   });
