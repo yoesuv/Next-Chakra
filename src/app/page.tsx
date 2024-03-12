@@ -1,6 +1,6 @@
 "use client";
 
-import UseListPost from "@/networks/list-post-service";
+import { UseListPost } from "@/networks/post-service";
 import { EditIcon, InfoOutlineIcon, DeleteIcon } from "@chakra-ui/icons";
 import {
   Table,
@@ -33,7 +33,7 @@ export default function Home() {
                       <InfoOutlineIcon />
                     </Button>
                   </Link>
-                  <Link href="/">
+                  <Link href={"post/" + item.id + "/edit"}>
                     <Button size="xs" colorScheme="blue">
                       <EditIcon />
                     </Button>

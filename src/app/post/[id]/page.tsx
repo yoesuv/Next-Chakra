@@ -1,6 +1,6 @@
 "use client";
 
-import UseDetailPost from "@/networks/detail-post-service";
+import { UseDetailPost } from "@/networks/post-service";
 import { ArrowBackIcon } from "@chakra-ui/icons";
 import {
   Container,
@@ -12,6 +12,7 @@ import {
   HStack,
 } from "@chakra-ui/react";
 import { useRouter } from "next/navigation";
+import LoadingDetailPost from "./loading-detail-post";
 
 interface PostProps {
   params: { id: number };
@@ -19,7 +20,11 @@ interface PostProps {
 
 export default function DetailPost({ params }: PostProps) {
   const router = useRouter();
-  const { data, isLoading, isError } = UseDetailPost(params.id);
+  const { data, isLoading, isError, isPending } = UseDetailPost(params.id);
+
+  if (isLoading || isPending) {
+    return <LoadingDetailPost />;
+  }
 
   return (
     <Container maxW="container.lg" mt={10}>
@@ -33,9 +38,11 @@ export default function DetailPost({ params }: PostProps) {
           />
           <Heading size="lg">Detail Posts {params.id}</Heading>
         </HStack>
-        <Text mt={5} fontSize="2xl" fontWeight="medium">
-          {data?.title}
-        </Text>
+        <Box mt={5}>
+          <Text fontSize="2xl" fontWeight="medium">
+            {data?.title}
+          </Text>
+        </Box>
         <Text fontSize="lg">{data?.body}</Text>
       </VStack>
     </Container>
