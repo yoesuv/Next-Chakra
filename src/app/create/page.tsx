@@ -1,5 +1,6 @@
 "use client";
 
+import { schemaPost } from "@/utils/validations/post-validation";
 import { AddIcon, RepeatIcon } from "@chakra-ui/icons";
 import {
   Button,
@@ -16,6 +17,7 @@ import {
   NumberInputStepper,
   Textarea,
 } from "@chakra-ui/react";
+import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm, SubmitHandler } from "react-hook-form";
 
 export interface IFormPost {
@@ -25,7 +27,14 @@ export interface IFormPost {
 }
 
 export default function Create() {
-  const { register, handleSubmit } = useForm<IFormPost>();
+  const {
+    register,
+    handleSubmit,
+    formState: { isDirty, isValid, errors },
+  } = useForm<IFormPost>({
+    mode: "onChange",
+    resolver: yupResolver(schemaPost),
+  });
 
   const onSubmit: SubmitHandler<IFormPost> = (post) => {
     console.log(JSON.stringify(post));
@@ -68,7 +77,12 @@ export default function Create() {
             <RepeatIcon boxSize={3} />
             &nbsp;RESET
           </Button>
-          <Button type="submit" w="full" colorScheme="blue">
+          <Button
+            type="submit"
+            w="full"
+            colorScheme="blue"
+            isDisabled={!isDirty || !isValid}
+          >
             <AddIcon boxSize={3} />
             &nbsp;SAVE
           </Button>
