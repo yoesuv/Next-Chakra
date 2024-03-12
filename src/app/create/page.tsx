@@ -1,5 +1,7 @@
 "use client";
 
+import { PostModel } from "@/models/post-model";
+import { createPost } from "@/networks/post-service";
 import { schemaPost } from "@/utils/validations/post-validation";
 import { AddIcon, RepeatIcon } from "@chakra-ui/icons";
 import {
@@ -19,6 +21,7 @@ import {
   Textarea,
 } from "@chakra-ui/react";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { useMutation } from "@tanstack/react-query";
 import { useForm, SubmitHandler } from "react-hook-form";
 
 export interface IFormPost {
@@ -31,14 +34,37 @@ export default function Create() {
   const {
     register,
     handleSubmit,
+    reset,
     formState: { isDirty, isValid, errors },
   } = useForm<IFormPost>({
+    defaultValues: {
+      title: "",
+      body: "",
+      userId: 0,
+    },
     mode: "onChange",
     resolver: yupResolver(schemaPost),
   });
 
+  const mutation = useMutation({
+    mutationKey: ["createPost"],
+    mutationFn: async (newPost: PostModel) => await createPost(newPost),
+    onSuccess: () => {
+      reset();
+    },
+    onError: () => {
+      alert("Error create post");
+    },
+  });
+
   const onSubmit: SubmitHandler<IFormPost> = (post) => {
-    console.log(JSON.stringify(post));
+    var newPost: PostModel = {
+      id: 101,
+      title: post.title,
+      body: post.body,
+      userId: post.userId,
+    };
+    mutation.mutate(newPost);
   };
 
   return (
@@ -97,7 +123,7 @@ export default function Create() {
             type="submit"
             w="full"
             colorScheme="blue"
-            isDisabled={!isDirty || !isValid}
+            isDisabled={!isDirty || !isValid || mutation.isPending}
           >
             <AddIcon boxSize={3} />
             &nbsp;SAVE
