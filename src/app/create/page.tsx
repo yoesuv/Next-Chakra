@@ -6,6 +6,7 @@ import {
   Button,
   Container,
   FormControl,
+  FormErrorMessage,
   FormLabel,
   HStack,
   Heading,
@@ -44,19 +45,33 @@ export default function Create() {
     <form onSubmit={handleSubmit(onSubmit)} noValidate>
       <Container centerContent={true}>
         <Heading mt={10}>Create Post</Heading>
-        <FormControl isRequired mt={4}>
+        <FormControl
+          isRequired
+          mt={4}
+          isInvalid={errors.title?.message !== undefined}
+        >
           <FormLabel>Post Title</FormLabel>
           <Input
             type="text"
             placeholder="input title here"
             {...register("title")}
           />
+          <FormErrorMessage>{errors.title?.message}</FormErrorMessage>
         </FormControl>
-        <FormControl isRequired mt={4}>
+        <FormControl
+          isRequired
+          mt={4}
+          isInvalid={errors.body?.message !== undefined}
+        >
           <FormLabel>Post Body</FormLabel>
           <Textarea placeholder="input body here" {...register("body")} />
+          <FormErrorMessage>{errors.body?.message}</FormErrorMessage>
         </FormControl>
-        <FormControl isRequired mt={4}>
+        <FormControl
+          isRequired
+          mt={4}
+          isInvalid={errors.userId?.message !== undefined}
+        >
           <FormLabel>User Id</FormLabel>
           <NumberInput>
             <NumberInputField
@@ -70,6 +85,7 @@ export default function Create() {
               <NumberDecrementStepper />
             </NumberInputStepper>
           </NumberInput>
+          <FormErrorMessage>{errors.userId?.message}</FormErrorMessage>
         </FormControl>
 
         <HStack w="full" spacing={4} mt={5}>
