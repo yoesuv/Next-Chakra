@@ -20,9 +20,10 @@ import {
   NumberInputStepper,
   Spinner,
   Textarea,
+  useToast,
 } from "@chakra-ui/react";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useForm, SubmitHandler } from "react-hook-form";
 
 export interface IFormPost {
@@ -32,6 +33,8 @@ export interface IFormPost {
 }
 
 export default function Create() {
+  const toast = useToast();
+  const queryClient = useQueryClient();
   const {
     register,
     handleSubmit,
@@ -52,9 +55,23 @@ export default function Create() {
     mutationFn: async (newPost: PostModel) => await createPost(newPost),
     onSuccess: () => {
       reset();
+      queryClient.invalidateQueries({ queryKey: ["posts"] });
+      toast({
+        title: "Create Post",
+        description: "Success Create Post",
+        status: "success",
+        duration: 3000,
+        isClosable: true,
+      });
     },
     onError: () => {
-      alert("Error create post");
+      toast({
+        title: "Create Post",
+        description: "Failed Create Post",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      });
     },
   });
 
