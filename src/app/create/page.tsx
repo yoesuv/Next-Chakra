@@ -18,6 +18,7 @@ import {
   NumberInput,
   NumberInputField,
   NumberInputStepper,
+  Spinner,
   Textarea,
 } from "@chakra-ui/react";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -125,7 +126,8 @@ export default function Create() {
             colorScheme="blue"
             isDisabled={!isDirty || !isValid || mutation.isPending}
           >
-            <AddIcon boxSize={3} />
+            {mutation.isPending && <Spinner size="sm" />}
+            {!mutation.isPending && <AddIcon boxSize={3} />}
             &nbsp;SAVE
           </Button>
         </HStack>
