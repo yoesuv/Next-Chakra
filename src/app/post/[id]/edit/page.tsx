@@ -1,6 +1,7 @@
 "use client";
 
 import { IFormPost } from "@/app/create/page";
+import { UseDetailPost } from "@/networks/post-service";
 import { schemaPost } from "@/utils/validations/post-validation";
 import { ArrowBackIcon, EditIcon } from "@chakra-ui/icons";
 import {
@@ -12,18 +13,20 @@ import {
   HStack,
   Heading,
   Input,
-  NumberDecrementStepper,
-  NumberIncrementStepper,
   NumberInput,
   NumberInputField,
-  NumberInputStepper,
+  Spinner,
   Textarea,
 } from "@chakra-ui/react";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useRouter } from "next/navigation";
 import { useForm, SubmitHandler } from "react-hook-form";
 
-export default function EdiPost() {
+interface DetailPostProps {
+  params: { id: string };
+}
+
+export default function EdiPost({ params }: DetailPostProps) {
   const router = useRouter();
   const {
     register,
@@ -33,11 +36,21 @@ export default function EdiPost() {
     mode: "onChange",
     resolver: yupResolver(schemaPost),
   });
+  const { data, isLoading } = UseDetailPost(params.id);
+
+  if (isLoading) {
+    return (
+      <Container centerContent={true}>
+        <Heading mt={10}>Edit Post {params.id}</Heading>
+        <Spinner mt={10} size="lg" />
+      </Container>
+    );
+  }
 
   return (
     <form noValidate>
       <Container centerContent={true}>
-        <Heading mt={10}>Edit Post</Heading>
+        <Heading mt={10}>Edit Post {params.id}</Heading>
 
         <FormControl
           isRequired
@@ -48,7 +61,9 @@ export default function EdiPost() {
           <Input
             type="text"
             placeholder="input title here"
-            {...register("title")}
+            {...register("title", {
+              value: data?.title,
+            })}
           />
           <FormErrorMessage>{errors.title?.message}</FormErrorMessage>
         </FormControl>
@@ -58,7 +73,12 @@ export default function EdiPost() {
           isInvalid={errors.body?.message !== undefined}
         >
           <FormLabel>Post Body</FormLabel>
-          <Textarea placeholder="input body here" {...register("body")} />
+          <Textarea
+            placeholder="input body here"
+            {...register("body", {
+              value: data?.body,
+            })}
+          />
           <FormErrorMessage>{errors.body?.message}</FormErrorMessage>
         </FormControl>
         <FormControl
@@ -71,13 +91,10 @@ export default function EdiPost() {
             <NumberInputField
               placeholder="input user id here"
               {...register("userId", {
+                value: data?.userId,
                 valueAsNumber: true,
               })}
             />
-            <NumberInputStepper>
-              <NumberIncrementStepper />
-              <NumberDecrementStepper />
-            </NumberInputStepper>
           </NumberInput>
           <FormErrorMessage>{errors.userId?.message}</FormErrorMessage>
         </FormControl>

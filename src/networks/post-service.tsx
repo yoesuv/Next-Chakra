@@ -7,7 +7,7 @@ async function fetchPosts(): Promise<PostModel[]> {
   return result.data;
 }
 
-async function fetchDetailPosts(id: number): Promise<PostModel> {
+async function fetchDetailPosts(id: number | string): Promise<PostModel> {
   const result = await client.get("posts/" + id);
   return result.data;
 }
@@ -35,7 +35,7 @@ export const UseListPost = () =>
     },
   });
 
-export const UseDetailPost = (id: number) =>
+export const UseDetailPost = (id: number | string) =>
   useQuery({
     queryKey: ["detailPost"],
     queryFn: () => {
