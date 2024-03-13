@@ -1,5 +1,6 @@
 "use client";
 
+import { PostModel } from "@/models/post-model";
 import { UseListPost } from "@/networks/post-service";
 import { EditIcon, InfoOutlineIcon, DeleteIcon } from "@chakra-ui/icons";
 import {
@@ -18,14 +19,22 @@ import {
   AlertDialogHeader,
   AlertDialogBody,
   AlertDialogFooter,
+  VStack,
+  Text,
 } from "@chakra-ui/react";
 import Link from "next/link";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 
 export default function Home() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = useRef<HTMLButtonElement>(null);
   const { data, isLoading, isError } = UseListPost();
+  const [post, setPost] = useState<PostModel>();
+
+  const onConfirmDelete = (post: PostModel) => {
+    setPost(post);
+    onOpen();
+  };
 
   return (
     <div>
@@ -36,12 +45,12 @@ export default function Home() {
       >
         <AlertDialogOverlay>
           <AlertDialogContent>
-            <AlertDialogHeader fontSize="lg" fontWeight="bold">
+            <AlertDialogHeader fontSize="2xl" fontWeight="bold">
               Delete
             </AlertDialogHeader>
-
-            <AlertDialogBody>Delete Post?</AlertDialogBody>
-
+            <AlertDialogBody fontSize="lg" fontWeight="medium">
+              Confirm Delete Post : {post?.id}. {post?.title}?
+            </AlertDialogBody>
             <AlertDialogFooter>
               <Button ref={cancelRef} onClick={onClose}>
                 Cancel
@@ -76,7 +85,13 @@ export default function Home() {
                       </Button>
                     </Link>
 
-                    <Button size="xs" colorScheme="red" onClick={onOpen}>
+                    <Button
+                      size="xs"
+                      colorScheme="red"
+                      onClick={() => {
+                        onConfirmDelete(item);
+                      }}
+                    >
                       <DeleteIcon />
                     </Button>
                   </HStack>
