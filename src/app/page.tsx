@@ -11,44 +11,81 @@ import {
   Button,
   HStack,
   Spacer,
+  useDisclosure,
+  AlertDialog,
+  AlertDialogOverlay,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogBody,
+  AlertDialogFooter,
 } from "@chakra-ui/react";
 import Link from "next/link";
+import { useRef } from "react";
 
 export default function Home() {
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const cancelRef = useRef<HTMLButtonElement>(null);
   const { data, isLoading, isError } = UseListPost();
 
   return (
-    <TableContainer>
-      <Table>
-        <Tbody>
-          {data?.map((item, index) => (
-            <Tr key={item.id}>
-              <Th>{index + 1}</Th>
-              <Th>{item.title}</Th>
-              <Th>
-                <HStack>
-                  <Spacer />
-                  <Link href={"post/" + item.id}>
-                    <Button size="xs" colorScheme="green">
-                      <InfoOutlineIcon />
-                    </Button>
-                  </Link>
-                  <Link href={"post/" + item.id + "/edit"}>
-                    <Button size="xs" colorScheme="blue">
-                      <EditIcon />
-                    </Button>
-                  </Link>
-                  <Link href="/">
-                    <Button size="xs" colorScheme="red">
+    <div>
+      <AlertDialog
+        isOpen={isOpen}
+        leastDestructiveRef={cancelRef}
+        onClose={onClose}
+      >
+        <AlertDialogOverlay>
+          <AlertDialogContent>
+            <AlertDialogHeader fontSize="lg" fontWeight="bold">
+              Delete
+            </AlertDialogHeader>
+
+            <AlertDialogBody>Delete Post?</AlertDialogBody>
+
+            <AlertDialogFooter>
+              <Button ref={cancelRef} onClick={onClose}>
+                Cancel
+              </Button>
+              <Button colorScheme="red" onClick={onClose} ml={3}>
+                Yes
+              </Button>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialogOverlay>
+      </AlertDialog>
+
+      <TableContainer>
+        <Table>
+          <Tbody>
+            {data?.map((item, index) => (
+              <Tr key={item.id}>
+                <Th>{index + 1}</Th>
+                <Th>{item.title}</Th>
+                <Th>
+                  <HStack>
+                    <Spacer />
+                    <Link href={"post/" + item.id}>
+                      <Button size="xs" colorScheme="green">
+                        <InfoOutlineIcon />
+                      </Button>
+                    </Link>
+
+                    <Link href={"post/" + item.id + "/edit"}>
+                      <Button size="xs" colorScheme="blue">
+                        <EditIcon />
+                      </Button>
+                    </Link>
+
+                    <Button size="xs" colorScheme="red" onClick={onOpen}>
                       <DeleteIcon />
                     </Button>
-                  </Link>
-                </HStack>
-              </Th>
-            </Tr>
-          ))}
-        </Tbody>
-      </Table>
-    </TableContainer>
+                  </HStack>
+                </Th>
+              </Tr>
+            ))}
+          </Tbody>
+        </Table>
+      </TableContainer>
+    </div>
   );
 }
