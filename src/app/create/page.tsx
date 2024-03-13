@@ -96,6 +96,11 @@ export default function Create() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = useRef<HTMLButtonElement>(null);
 
+  const clickReset = () => {
+    onClose();
+    reset();
+  };
+
   return (
     <form onSubmit={handleSubmit(onSubmit)} noValidate>
       <AlertDialog
@@ -115,7 +120,7 @@ export default function Create() {
               <Button ref={cancelRef} onClick={onClose}>
                 Cancel
               </Button>
-              <Button colorScheme="red" onClick={onClose} ml={3}>
+              <Button colorScheme="red" onClick={clickReset} ml={3}>
                 Yes
               </Button>
             </AlertDialogFooter>
