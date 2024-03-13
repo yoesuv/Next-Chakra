@@ -5,6 +5,12 @@ import { createPost } from "@/networks/post-service";
 import { schemaPost } from "@/utils/validations/post-validation";
 import { AddIcon, RepeatIcon } from "@chakra-ui/icons";
 import {
+  AlertDialog,
+  AlertDialogBody,
+  AlertDialogContent,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogOverlay,
   Button,
   Container,
   FormControl,
@@ -20,10 +26,12 @@ import {
   NumberInputStepper,
   Spinner,
   Textarea,
+  useDisclosure,
   useToast,
 } from "@chakra-ui/react";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useRef } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 
 export interface IFormPost {
@@ -85,8 +93,41 @@ export default function Create() {
     mutation.mutate(newPost);
   };
 
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const cancelRef = useRef<HTMLButtonElement>(null);
+
+  const clickReset = () => {
+    onClose();
+    reset();
+  };
+
   return (
     <form onSubmit={handleSubmit(onSubmit)} noValidate>
+      <AlertDialog
+        isOpen={isOpen}
+        leastDestructiveRef={cancelRef}
+        onClose={onClose}
+      >
+        <AlertDialogOverlay>
+          <AlertDialogContent>
+            <AlertDialogHeader fontSize="lg" fontWeight="bold">
+              Reset
+            </AlertDialogHeader>
+
+            <AlertDialogBody>Reset Form Create Post?</AlertDialogBody>
+
+            <AlertDialogFooter>
+              <Button ref={cancelRef} onClick={onClose}>
+                Cancel
+              </Button>
+              <Button colorScheme="red" onClick={clickReset} ml={3}>
+                Yes
+              </Button>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialogOverlay>
+      </AlertDialog>
+
       <Container centerContent={true}>
         <Heading mt={10}>Create Post</Heading>
         <FormControl
@@ -133,7 +174,7 @@ export default function Create() {
         </FormControl>
 
         <HStack w="full" spacing={4} mt={5}>
-          <Button type="button" w="full" colorScheme="red">
+          <Button type="button" w="full" colorScheme="red" onClick={onOpen}>
             <RepeatIcon boxSize={3} />
             &nbsp;RESET
           </Button>
