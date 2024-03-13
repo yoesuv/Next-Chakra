@@ -1,7 +1,8 @@
 "use client";
 
 import { IFormPost } from "@/app/create/page";
-import { UseDetailPost } from "@/networks/post-service";
+import { PostModel } from "@/models/post-model";
+import { UseDetailPost, updatePost } from "@/networks/post-service";
 import { schemaPost } from "@/utils/validations/post-validation";
 import { ArrowBackIcon, EditIcon } from "@chakra-ui/icons";
 import {
@@ -17,8 +18,10 @@ import {
   NumberInputField,
   Spinner,
   Textarea,
+  useToast,
 } from "@chakra-ui/react";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useForm, SubmitHandler } from "react-hook-form";
 
@@ -28,6 +31,7 @@ interface DetailPostProps {
 
 export default function EdiPost({ params }: DetailPostProps) {
   const router = useRouter();
+  const toast = useToast();
   const {
     register,
     handleSubmit,
@@ -37,6 +41,32 @@ export default function EdiPost({ params }: DetailPostProps) {
     resolver: yupResolver(schemaPost),
   });
   const { data, isLoading } = UseDetailPost(params.id);
+
+  const onSubmit: SubmitHandler<IFormPost> = (post) => {
+    var thePost: PostModel = {
+      id: parseInt(params.id),
+      title: post.title,
+      body: post.body,
+      userId: post.userId,
+    };
+    mutation.mutate(thePost);
+  };
+
+  const mutation = useMutation({
+    mutationKey: ["editPost"],
+    mutationFn: async (updatedPost: PostModel) => await updatePost(updatedPost),
+    onSuccess: () => {
+      toast({
+        title: "Edit Post",
+        description: "Success Edit Post",
+        status: "success",
+        duration: 3000,
+        isClosable: true,
+      });
+      router.refresh();
+      router.push("/");
+    },
+  });
 
   if (isLoading) {
     return (
@@ -48,7 +78,7 @@ export default function EdiPost({ params }: DetailPostProps) {
   }
 
   return (
-    <form noValidate>
+    <form noValidate onSubmit={handleSubmit(onSubmit)}>
       <Container centerContent={true}>
         <Heading mt={10}>Edit Post {params.id}</Heading>
 
@@ -113,9 +143,10 @@ export default function EdiPost({ params }: DetailPostProps) {
             type="submit"
             w="full"
             colorScheme="blue"
-            isDisabled={!isDirty || !isValid}
+            isDisabled={!isDirty || !isValid || mutation.isPending}
           >
-            <EditIcon boxSize={3} />
+            {mutation.isPending && <Spinner size="sm" />}
+            {!mutation.isPending && <EditIcon boxSize={3} />}
             &nbsp;UPDATE
           </Button>
         </HStack>
