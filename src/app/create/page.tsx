@@ -149,7 +149,11 @@ export default function Create() {
           isInvalid={errors.body?.message !== undefined}
         >
           <FormLabel>Post Body</FormLabel>
-          <Textarea placeholder="input body here" {...register("body")} />
+          <Textarea
+            placeholder="input body here"
+            minH={150}
+            {...register("body")}
+          />
           <FormErrorMessage>{errors.body?.message}</FormErrorMessage>
         </FormControl>
         <FormControl
