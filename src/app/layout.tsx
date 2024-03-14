@@ -21,7 +21,7 @@ export default function RootLayout({
       <body className={fonts.rubik.variable}>
         <AppChakraProvider>
           <Providers>
-            <Flex as="header" position="fixed" w="100%" bg="white">
+            <Flex as="header" position="fixed" w="100%" bg="white" zIndex={1}>
               <Box shadow="sm" w="100%">
                 <Navbar />
               </Box>

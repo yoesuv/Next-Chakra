@@ -21,7 +21,7 @@ export default function Gallery() {
 
   return (
     <Container maxW="container.xl" pb={8}>
-      <SimpleGrid minChildWidth={250} gap={4}>
+      <SimpleGrid minChildWidth={250} gap={4} mt={2}>
         {data?.map((item, index) => (
           <Box key={index}>
             <Card shadow="sm" borderRadius={6}>
