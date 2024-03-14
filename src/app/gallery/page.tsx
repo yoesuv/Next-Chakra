@@ -20,16 +20,18 @@ export default function Gallery() {
   }
 
   return (
-    <Container maxW="container.xl">
+    <Container maxW="container.xl" pb={8}>
       <SimpleGrid minChildWidth={250} gap={4}>
         {data?.map((item, index) => (
           <Box key={index}>
-            <Card shadow="sm">
-              <CardBody>
-                <Image src={item.url} />
-                <Text mt={4} fontWeight="medium" fontSize="md" noOfLines={1}>
-                  {item.title}
-                </Text>
+            <Card shadow="sm" borderRadius={6}>
+              <CardBody p={0}>
+                <Image src={item.url} borderTopRadius={6} />
+                <Box my={4} mx={2}>
+                  <Text fontWeight="medium" fontSize="md" noOfLines={1}>
+                    {item.title}
+                  </Text>
+                </Box>
               </CardBody>
             </Card>
           </Box>
