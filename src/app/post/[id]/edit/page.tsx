@@ -104,6 +104,7 @@ export default function EdiPost({ params }: DetailPostProps) {
         >
           <FormLabel>Post Body</FormLabel>
           <Textarea
+            minH={150}
             placeholder="input body here"
             {...register("body", {
               value: data?.body,
