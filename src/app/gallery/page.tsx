@@ -11,12 +11,13 @@ import {
   SimpleGrid,
   Text,
 } from "@chakra-ui/react";
+import LoadingGallery from "./loading-gallery";
 
 export default function Gallery() {
   const { data, isLoading } = UseListPhoto();
 
   if (isLoading) {
-    return <Heading>Loading...</Heading>;
+    return <LoadingGallery />;
   }
 
   return (
