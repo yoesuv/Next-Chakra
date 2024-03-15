@@ -6,7 +6,6 @@ import {
   Card,
   CardBody,
   Container,
-  Heading,
   Image,
   SimpleGrid,
   Text,
@@ -27,7 +26,12 @@ export default function Gallery() {
           <Box key={index}>
             <Card shadow="sm" borderRadius={6}>
               <CardBody p={0}>
-                <Image src={item.url} borderTopRadius={6} />
+                <Image
+                  src={item.url}
+                  fallbackSrc="placeholder_image.png"
+                  borderTopRadius={6}
+                  alt={item.title}
+                />
                 <Box my={4} mx={2}>
                   <Text fontWeight="medium" fontSize="md" noOfLines={1}>
                     {item.title}
