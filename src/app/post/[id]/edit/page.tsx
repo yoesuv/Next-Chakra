@@ -35,7 +35,7 @@ export default function EdiPost({ params }: DetailPostProps) {
   const {
     register,
     handleSubmit,
-    formState: { isDirty, isValid, errors },
+    formState: { isValid, errors },
   } = useForm<IFormPost>({
     mode: "onChange",
     resolver: yupResolver(schemaPost),
