@@ -32,7 +32,7 @@ import {
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRef } from "react";
-import { useForm, SubmitHandler } from "react-hook-form";
+import { useForm, SubmitHandler, Controller } from "react-hook-form";
 
 export interface IFormPost {
   title: string;
@@ -47,6 +47,7 @@ export default function Create() {
     register,
     handleSubmit,
     reset,
+    control,
     formState: { isDirty, isValid, errors },
   } = useForm<IFormPost>({
     defaultValues: {
@@ -162,18 +163,23 @@ export default function Create() {
           isInvalid={errors.userId?.message !== undefined}
         >
           <FormLabel>User Id</FormLabel>
-          <NumberInput>
-            <NumberInputField
-              placeholder="input user id here"
-              {...register("userId", {
-                valueAsNumber: true,
-              })}
-            />
-            <NumberInputStepper>
-              <NumberIncrementStepper />
-              <NumberDecrementStepper />
-            </NumberInputStepper>
-          </NumberInput>
+          <Controller
+            name="userId"
+            control={control}
+            render={({ field: { ref, ...restField } }) => (
+              <NumberInput {...restField}>
+                <NumberInputField
+                  ref={ref}
+                  placeholder="input user id here"
+                  name={restField.name}
+                />
+                <NumberInputStepper>
+                  <NumberIncrementStepper />
+                  <NumberDecrementStepper />
+                </NumberInputStepper>
+              </NumberInput>
+            )}
+          />
           <FormErrorMessage>{errors.userId?.message}</FormErrorMessage>
         </FormControl>
 
