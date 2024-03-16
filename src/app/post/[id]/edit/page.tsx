@@ -144,7 +144,7 @@ export default function EdiPost({ params }: DetailPostProps) {
             type="submit"
             w="full"
             colorScheme="blue"
-            isDisabled={!isDirty || !isValid || mutation.isPending}
+            isDisabled={!isValid || mutation.isPending}
           >
             {mutation.isPending && <Spinner size="sm" />}
             {!mutation.isPending && <EditIcon boxSize={3} />}
