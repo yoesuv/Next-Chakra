@@ -2,6 +2,7 @@
 
 import { PostModel } from "@/models/post-model";
 import { createPost } from "@/networks/post-service";
+import { useToastSuccess } from "@/utils/app-toast";
 import { schemaPost } from "@/utils/validations/post-validation";
 import { AddIcon, RepeatIcon } from "@chakra-ui/icons";
 import {
@@ -27,7 +28,6 @@ import {
   Spinner,
   Textarea,
   useDisclosure,
-  useToast,
 } from "@chakra-ui/react";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -41,7 +41,7 @@ export interface IFormPost {
 }
 
 export default function Create() {
-  const toast = useToast();
+  const { successToast } = useToastSuccess();
   const queryClient = useQueryClient();
   const {
     register,
@@ -65,23 +65,9 @@ export default function Create() {
     onSuccess: () => {
       reset();
       queryClient.invalidateQueries({ queryKey: ["posts"] });
-      toast({
-        title: "Create Post",
-        description: "Success Create Post",
-        status: "success",
-        duration: 3000,
-        isClosable: true,
-      });
+      successToast("Success", "Success Create Post");
     },
-    onError: () => {
-      toast({
-        title: "Create Post",
-        description: "Failed Create Post",
-        status: "error",
-        duration: 5000,
-        isClosable: true,
-      });
-    },
+    onError: () => {},
   });
 
   const onSubmit: SubmitHandler<IFormPost> = (post) => {
