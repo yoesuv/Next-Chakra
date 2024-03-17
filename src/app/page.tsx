@@ -67,10 +67,10 @@ export default function Home() {
       >
         <AlertDialogOverlay>
           <AlertDialogContent>
-            <AlertDialogHeader fontSize="2xl" fontWeight="bold">
+            <AlertDialogHeader fontSize="lg" fontWeight="bold">
               Delete
             </AlertDialogHeader>
-            <AlertDialogBody fontSize="lg" fontWeight="medium">
+            <AlertDialogBody>
               Confirm Delete Post : {post?.id}. {post?.title}?
             </AlertDialogBody>
             <AlertDialogFooter>
