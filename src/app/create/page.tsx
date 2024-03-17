@@ -2,16 +2,11 @@
 
 import { PostModel } from "@/models/post-model";
 import { createPost } from "@/networks/post-service";
+import AppAlertConfirm from "@/utils/app-alert-confirm";
 import { useToast } from "@/utils/app-toast";
 import { schemaPost } from "@/utils/validations/post-validation";
 import { AddIcon, RepeatIcon } from "@chakra-ui/icons";
 import {
-  AlertDialog,
-  AlertDialogBody,
-  AlertDialogContent,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogOverlay,
   Button,
   Container,
   FormControl,
@@ -92,30 +87,16 @@ export default function Create() {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} noValidate>
-      <AlertDialog
-        isOpen={isOpen}
-        leastDestructiveRef={cancelRef}
-        onClose={onClose}
-      >
-        <AlertDialogOverlay>
-          <AlertDialogContent>
-            <AlertDialogHeader fontSize="lg" fontWeight="bold">
-              Reset
-            </AlertDialogHeader>
-
-            <AlertDialogBody>Reset Form Create Post?</AlertDialogBody>
-
-            <AlertDialogFooter>
-              <Button ref={cancelRef} onClick={onClose}>
-                Cancel
-              </Button>
-              <Button colorScheme="red" onClick={clickReset} ml={3}>
-                Yes
-              </Button>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialogOverlay>
-      </AlertDialog>
+      <AppAlertConfirm
+        props={{
+          isOpen,
+          onClose,
+          onYes: clickReset,
+          cancelRef,
+          title: "Reset",
+          message: "Reset Form Create Post?",
+        }}
+      />
 
       <Container centerContent={true}>
         <Heading mt={10}>Create Post</Heading>
