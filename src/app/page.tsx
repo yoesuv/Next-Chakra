@@ -2,6 +2,7 @@
 
 import { PostModel } from "@/models/post-model";
 import { UseListPost, deletePost } from "@/networks/post-service";
+import { useToast } from "@/utils/app-toast";
 import { EditIcon, InfoOutlineIcon, DeleteIcon } from "@chakra-ui/icons";
 import {
   Table,
@@ -19,7 +20,10 @@ import {
   AlertDialogHeader,
   AlertDialogBody,
   AlertDialogFooter,
-  useToast,
+  Container,
+  Center,
+  Spinner,
+  Flex,
 } from "@chakra-ui/react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import Link from "next/link";
@@ -28,11 +32,11 @@ import { useRef, useState } from "react";
 
 export default function Home() {
   const router = useRouter();
-  const toast = useToast();
+  const { successToast, errorToast } = useToast();
   const queryClient = useQueryClient();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = useRef<HTMLButtonElement>(null);
-  const { data, isLoading, isError } = UseListPost();
+  const { data, isLoading } = UseListPost();
   const [post, setPost] = useState<PostModel>();
 
   const onConfirmDelete = (post: PostModel) => {
@@ -49,26 +53,29 @@ export default function Home() {
     mutationKey: ["deletePost"],
     mutationFn: async () => await deletePost(post?.id || 1),
     onSuccess: () => {
-      toast({
-        title: "Delete Post",
-        description: "Success Delete Post",
-        status: "success",
-        duration: 3000,
-        isClosable: true,
-      });
+      successToast("Delete Post", "Success Delete Post");
       queryClient.invalidateQueries({ queryKey: ["posts"] });
       router.refresh();
     },
     onError: () => {
-      toast({
-        title: "Delete Post",
-        description: "Failed Dele Post",
-        status: "error",
-        duration: 5000,
-        isClosable: true,
-      });
+      errorToast("Delete Post", "Failed Delete Post");
     },
   });
+
+  if (isLoading) {
+    return (
+      <Flex
+        width={"100vw"}
+        height={"90vh"}
+        alignContent={"center"}
+        justifyContent={"center"}
+      >
+        <Center>
+          <Spinner size="lg" />
+        </Center>
+      </Flex>
+    );
+  }
 
   return (
     <div>
@@ -79,10 +86,10 @@ export default function Home() {
       >
         <AlertDialogOverlay>
           <AlertDialogContent>
-            <AlertDialogHeader fontSize="2xl" fontWeight="bold">
+            <AlertDialogHeader fontSize="lg" fontWeight="bold">
               Delete
             </AlertDialogHeader>
-            <AlertDialogBody fontSize="lg" fontWeight="medium">
+            <AlertDialogBody>
               Confirm Delete Post : {post?.id}. {post?.title}?
             </AlertDialogBody>
             <AlertDialogFooter>

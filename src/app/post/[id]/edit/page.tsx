@@ -3,6 +3,7 @@
 import { IFormPost } from "@/app/create/page";
 import { PostModel } from "@/models/post-model";
 import { UseDetailPost, updatePost } from "@/networks/post-service";
+import { useToast } from "@/utils/app-toast";
 import { schemaPost } from "@/utils/validations/post-validation";
 import { ArrowBackIcon, EditIcon } from "@chakra-ui/icons";
 import {
@@ -18,7 +19,6 @@ import {
   NumberInputField,
   Spinner,
   Textarea,
-  useToast,
 } from "@chakra-ui/react";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useMutation } from "@tanstack/react-query";
@@ -31,11 +31,11 @@ interface DetailPostProps {
 
 export default function EdiPost({ params }: DetailPostProps) {
   const router = useRouter();
-  const toast = useToast();
+  const { successToast, errorToast } = useToast();
   const {
     register,
     handleSubmit,
-    formState: { isDirty, isValid, errors },
+    formState: { isValid, errors },
   } = useForm<IFormPost>({
     mode: "onChange",
     resolver: yupResolver(schemaPost),
@@ -56,15 +56,12 @@ export default function EdiPost({ params }: DetailPostProps) {
     mutationKey: ["editPost"],
     mutationFn: async (updatedPost: PostModel) => await updatePost(updatedPost),
     onSuccess: () => {
-      toast({
-        title: "Edit Post",
-        description: "Success Edit Post",
-        status: "success",
-        duration: 3000,
-        isClosable: true,
-      });
+      successToast("Edit Post", "Success Update Post");
       router.refresh();
       router.push("/");
+    },
+    onError: () => {
+      errorToast("Edit Post", "Failed Update Post");
     },
   });
 
@@ -144,7 +141,7 @@ export default function EdiPost({ params }: DetailPostProps) {
             type="submit"
             w="full"
             colorScheme="blue"
-            isDisabled={!isDirty || !isValid || mutation.isPending}
+            isDisabled={!isValid || mutation.isPending}
           >
             {mutation.isPending && <Spinner size="sm" />}
             {!mutation.isPending && <EditIcon boxSize={3} />}

@@ -2,6 +2,7 @@
 
 import { PostModel } from "@/models/post-model";
 import { createPost } from "@/networks/post-service";
+import { useToast } from "@/utils/app-toast";
 import { schemaPost } from "@/utils/validations/post-validation";
 import { AddIcon, RepeatIcon } from "@chakra-ui/icons";
 import {
@@ -27,12 +28,11 @@ import {
   Spinner,
   Textarea,
   useDisclosure,
-  useToast,
 } from "@chakra-ui/react";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRef } from "react";
-import { useForm, SubmitHandler } from "react-hook-form";
+import { useForm, SubmitHandler, Controller } from "react-hook-form";
 
 export interface IFormPost {
   title: string;
@@ -41,12 +41,13 @@ export interface IFormPost {
 }
 
 export default function Create() {
-  const toast = useToast();
+  const { successToast, errorToast } = useToast();
   const queryClient = useQueryClient();
   const {
     register,
     handleSubmit,
     reset,
+    control,
     formState: { isDirty, isValid, errors },
   } = useForm<IFormPost>({
     defaultValues: {
@@ -64,22 +65,10 @@ export default function Create() {
     onSuccess: () => {
       reset();
       queryClient.invalidateQueries({ queryKey: ["posts"] });
-      toast({
-        title: "Create Post",
-        description: "Success Create Post",
-        status: "success",
-        duration: 3000,
-        isClosable: true,
-      });
+      successToast("Success", "Success Create Post");
     },
     onError: () => {
-      toast({
-        title: "Create Post",
-        description: "Failed Create Post",
-        status: "error",
-        duration: 5000,
-        isClosable: true,
-      });
+      errorToast("Error", "Failed Create Post");
     },
   });
 
@@ -162,18 +151,23 @@ export default function Create() {
           isInvalid={errors.userId?.message !== undefined}
         >
           <FormLabel>User Id</FormLabel>
-          <NumberInput>
-            <NumberInputField
-              placeholder="input user id here"
-              {...register("userId", {
-                valueAsNumber: true,
-              })}
-            />
-            <NumberInputStepper>
-              <NumberIncrementStepper />
-              <NumberDecrementStepper />
-            </NumberInputStepper>
-          </NumberInput>
+          <Controller
+            name="userId"
+            control={control}
+            render={({ field: { ref, ...restField } }) => (
+              <NumberInput {...restField}>
+                <NumberInputField
+                  ref={ref}
+                  placeholder="input user id here"
+                  name={restField.name}
+                />
+                <NumberInputStepper>
+                  <NumberIncrementStepper />
+                  <NumberDecrementStepper />
+                </NumberInputStepper>
+              </NumberInput>
+            )}
+          />
           <FormErrorMessage>{errors.userId?.message}</FormErrorMessage>
         </FormControl>
 
