@@ -20,6 +20,10 @@ import {
   AlertDialogHeader,
   AlertDialogBody,
   AlertDialogFooter,
+  Container,
+  Center,
+  Spinner,
+  Flex,
 } from "@chakra-ui/react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import Link from "next/link";
@@ -32,7 +36,7 @@ export default function Home() {
   const queryClient = useQueryClient();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = useRef<HTMLButtonElement>(null);
-  const { data, isLoading, isError } = UseListPost();
+  const { data, isLoading } = UseListPost();
   const [post, setPost] = useState<PostModel>();
 
   const onConfirmDelete = (post: PostModel) => {
@@ -57,6 +61,21 @@ export default function Home() {
       errorToast("Delete Post", "Failed Delete Post");
     },
   });
+
+  if (isLoading) {
+    return (
+      <Flex
+        width={"100vw"}
+        height={"90vh"}
+        alignContent={"center"}
+        justifyContent={"center"}
+      >
+        <Center>
+          <Spinner size="lg" />
+        </Center>
+      </Flex>
+    );
+  }
 
   return (
     <div>
