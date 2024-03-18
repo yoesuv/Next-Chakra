@@ -18,17 +18,26 @@ import {
   Center,
   Spinner,
   Flex,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalBody,
+  Text,
+  VStack,
 } from "@chakra-ui/react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
 
 export default function Home() {
-  const router = useRouter();
   const { successToast, errorToast } = useToast();
   const queryClient = useQueryClient();
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const {
+    isOpen: isOpenLoading,
+    onOpen: onOpenLoading,
+    onClose: onCloseLoading,
+  } = useDisclosure();
   const cancelRef = useRef<HTMLButtonElement>(null);
   const { data, isLoading } = UseListPost();
   const [post, setPost] = useState<PostModel>();
@@ -40,6 +49,7 @@ export default function Home() {
 
   const actionDelete = () => {
     onClose();
+    onOpenLoading();
     mutationDelete.mutate();
   };
 
@@ -47,11 +57,12 @@ export default function Home() {
     mutationKey: ["deletePost"],
     mutationFn: async () => await deletePost(post?.id || 1),
     onSuccess: () => {
+      onCloseLoading();
       successToast("Delete Post", "Success Delete Post");
       queryClient.invalidateQueries({ queryKey: ["posts"] });
-      router.refresh();
     },
     onError: () => {
+      onCloseLoading();
       errorToast("Delete Post", "Failed Delete Post");
     },
   });
@@ -83,6 +94,20 @@ export default function Home() {
           message: `Confirm Delete Post : ${post?.id}. ${post?.title}?`,
         }}
       />
+
+      <Modal isOpen={isOpenLoading} onClose={onCloseLoading}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalBody py={10}>
+            <Center>
+              <VStack>
+                <Spinner size="xl" />
+                <Text>Loading...</Text>
+              </VStack>
+            </Center>
+          </ModalBody>
+        </ModalContent>
+      </Modal>
 
       <TableContainer>
         <Table>
