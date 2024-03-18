@@ -3,6 +3,7 @@
 import { PostModel } from "@/models/post-model";
 import { UseListPost, deletePost } from "@/networks/post-service";
 import AppAlertConfirm from "@/utils/app-alert-confirm";
+import AppAlertLoading from "@/utils/app-alert-loading";
 import { useToast } from "@/utils/app-toast";
 import { EditIcon, InfoOutlineIcon, DeleteIcon } from "@chakra-ui/icons";
 import {
@@ -18,12 +19,6 @@ import {
   Center,
   Spinner,
   Flex,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalBody,
-  Text,
-  VStack,
 } from "@chakra-ui/react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import Link from "next/link";
@@ -95,19 +90,9 @@ export default function Home() {
         }}
       />
 
-      <Modal isOpen={isOpenLoading} onClose={onCloseLoading}>
-        <ModalOverlay />
-        <ModalContent>
-          <ModalBody py={10}>
-            <Center>
-              <VStack>
-                <Spinner size="xl" />
-                <Text>Loading...</Text>
-              </VStack>
-            </Center>
-          </ModalBody>
-        </ModalContent>
-      </Modal>
+      <AppAlertLoading
+        props={{ isOpen: isOpenLoading, onClose: onCloseLoading }}
+      />
 
       <TableContainer>
         <Table>
