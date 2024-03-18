@@ -2,6 +2,7 @@
 
 import { PostModel } from "@/models/post-model";
 import { UseListPost, deletePost } from "@/networks/post-service";
+import AppAlertConfirm from "@/utils/app-alert-confirm";
 import { useToast } from "@/utils/app-toast";
 import { EditIcon, InfoOutlineIcon, DeleteIcon } from "@chakra-ui/icons";
 import {
@@ -14,13 +15,6 @@ import {
   HStack,
   Spacer,
   useDisclosure,
-  AlertDialog,
-  AlertDialogOverlay,
-  AlertDialogContent,
-  AlertDialogHeader,
-  AlertDialogBody,
-  AlertDialogFooter,
-  Container,
   Center,
   Spinner,
   Flex,
@@ -79,30 +73,16 @@ export default function Home() {
 
   return (
     <div>
-      <AlertDialog
-        isOpen={isOpen}
-        leastDestructiveRef={cancelRef}
-        onClose={onClose}
-      >
-        <AlertDialogOverlay>
-          <AlertDialogContent>
-            <AlertDialogHeader fontSize="lg" fontWeight="bold">
-              Delete
-            </AlertDialogHeader>
-            <AlertDialogBody>
-              Confirm Delete Post : {post?.id}. {post?.title}?
-            </AlertDialogBody>
-            <AlertDialogFooter>
-              <Button ref={cancelRef} onClick={onClose}>
-                Cancel
-              </Button>
-              <Button colorScheme="red" onClick={actionDelete} ml={3}>
-                Yes
-              </Button>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialogOverlay>
-      </AlertDialog>
+      <AppAlertConfirm
+        props={{
+          isOpen,
+          onClose,
+          onYes: actionDelete,
+          cancelRef,
+          title: "Delete",
+          message: `Confirm Delete Post : ${post?.id}. ${post?.title}?`,
+        }}
+      />
 
       <TableContainer>
         <Table>
