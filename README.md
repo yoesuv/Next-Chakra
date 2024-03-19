@@ -1,6 +1,6 @@
 # Next JS & Chakra UI
 
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app). API source CRUD from [`jsonplaceholder`](https://jsonplaceholder.typicode.com/)
 
 ## Getting Started
 
@@ -18,6 +18,11 @@ npx next dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+
+### Screenshot ###
+| ![](https://i.imgur.com/Sb3jSnh.png) | ![](https://i.imgur.com/Hf3Arvg.png) | ![](https://i.imgur.com/0CmBPgN.png) |
+| :---: | :---: | :---: |
+| ![](https://i.imgur.com/pLptxwM.png) | ![](https://i.imgur.com/Bwk3GO5.png) | ![](https://i.imgur.com/uwGpDCV.png) |
 
 ### List Package
 

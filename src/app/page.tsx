@@ -2,6 +2,8 @@
 
 import { PostModel } from "@/models/post-model";
 import { UseListPost, deletePost } from "@/networks/post-service";
+import AppAlertConfirm from "@/utils/app-alert-confirm";
+import AppAlertLoading from "@/utils/app-alert-loading";
 import { useToast } from "@/utils/app-toast";
 import { EditIcon, InfoOutlineIcon, DeleteIcon } from "@chakra-ui/icons";
 import {
@@ -14,27 +16,23 @@ import {
   HStack,
   Spacer,
   useDisclosure,
-  AlertDialog,
-  AlertDialogOverlay,
-  AlertDialogContent,
-  AlertDialogHeader,
-  AlertDialogBody,
-  AlertDialogFooter,
-  Container,
   Center,
   Spinner,
   Flex,
 } from "@chakra-ui/react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
 
 export default function Home() {
-  const router = useRouter();
   const { successToast, errorToast } = useToast();
   const queryClient = useQueryClient();
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const {
+    isOpen: isOpenLoading,
+    onOpen: onOpenLoading,
+    onClose: onCloseLoading,
+  } = useDisclosure();
   const cancelRef = useRef<HTMLButtonElement>(null);
   const { data, isLoading } = UseListPost();
   const [post, setPost] = useState<PostModel>();
@@ -46,6 +44,7 @@ export default function Home() {
 
   const actionDelete = () => {
     onClose();
+    onOpenLoading();
     mutationDelete.mutate();
   };
 
@@ -53,11 +52,12 @@ export default function Home() {
     mutationKey: ["deletePost"],
     mutationFn: async () => await deletePost(post?.id || 1),
     onSuccess: () => {
+      onCloseLoading();
       successToast("Delete Post", "Success Delete Post");
       queryClient.invalidateQueries({ queryKey: ["posts"] });
-      router.refresh();
     },
     onError: () => {
+      onCloseLoading();
       errorToast("Delete Post", "Failed Delete Post");
     },
   });
@@ -79,30 +79,20 @@ export default function Home() {
 
   return (
     <div>
-      <AlertDialog
-        isOpen={isOpen}
-        leastDestructiveRef={cancelRef}
-        onClose={onClose}
-      >
-        <AlertDialogOverlay>
-          <AlertDialogContent>
-            <AlertDialogHeader fontSize="lg" fontWeight="bold">
-              Delete
-            </AlertDialogHeader>
-            <AlertDialogBody>
-              Confirm Delete Post : {post?.id}. {post?.title}?
-            </AlertDialogBody>
-            <AlertDialogFooter>
-              <Button ref={cancelRef} onClick={onClose}>
-                Cancel
-              </Button>
-              <Button colorScheme="red" onClick={actionDelete} ml={3}>
-                Yes
-              </Button>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialogOverlay>
-      </AlertDialog>
+      <AppAlertConfirm
+        props={{
+          isOpen,
+          onClose,
+          onYes: actionDelete,
+          cancelRef,
+          title: "Delete",
+          message: `Confirm Delete Post : ${post?.id}. ${post?.title}?`,
+        }}
+      />
+
+      <AppAlertLoading
+        props={{ isOpen: isOpenLoading, onClose: onCloseLoading }}
+      />
 
       <TableContainer>
         <Table>
