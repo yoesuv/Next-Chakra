@@ -11,7 +11,7 @@ Node JS version
 v18.19.0
 ```
 
-then, run the development server:
+install package with `npm install`, then run the development server:
 
 ```bash
 npx next dev
